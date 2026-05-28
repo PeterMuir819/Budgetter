@@ -1,0 +1,68 @@
+public class Transaction {
+
+    private   TransactionType type;
+    private   Category category;
+    private   String description;
+    private   String date;
+    private   double amount;
+  
+    public Transaction() {  // 1. Default — no arguments
+        this.description = "";
+    }
+
+    public Transaction(TransactionType type, double amount) {   // 2. Partial — maybe just the essentials
+        this.type = type;
+        this.amount = amount;
+        this.description = "";
+    }
+
+    public Transaction(TransactionType type, Category category, String description, String date, double amount) {   // 3. Full - all details
+        this.type = type;
+        this.category = category;
+        setDescription(description);                // use setter to handle nulls
+        this.date = date;
+        setAmount(amount);                          // use setter to leverage validation
+    }
+
+    public void setAmount(double amount) {
+        if (amount <= 0) {                          // validate first
+            System.out.println("Amount must be positive!");
+            return;                                 // exit early if invalid
+        }
+        this.amount = amount;                        // only assign if valid
+    }
+
+    public void setDescription(String description) {
+    if (description == null) {
+        this.description = "";
+        return;
+    }
+    this.description = description;
+    }
+
+
+    public TransactionType getType() {
+        return type;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public double getAmount() {
+        return amount;
+    }
+        @Override
+    public String toString() {
+        return date + " | " + type + " | " + category + " | " + description + " | $" + amount;
+    }
+    
+}

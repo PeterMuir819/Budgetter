@@ -1,0 +1,10 @@
+public enum TransactionType {
+	INCOME,
+	EXPENSE,
+	TRANSFER;
+}
+
+// How You'll Use It in Transaction.java
+// javaTransactionType type;
+// And when you instantiate a transaction later:
+// javatransaction.setType(TransactionType.EXPENSE);
