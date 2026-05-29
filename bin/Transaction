@@ -1,3 +1,5 @@
+import java.time.LocalDate;
+
 public class Transaction {
 
     private   TransactionType type;
@@ -7,20 +9,22 @@ public class Transaction {
     private   double amount;
   
     public Transaction() {  // 1. Default — no arguments
-        this.description = "";
+        setDescription("");  // default to empty string
+        this.date = LocalDate.now().toString(); 
     }
 
     public Transaction(TransactionType type, double amount) {   // 2. Partial — maybe just the essentials
         this.type = type;
-        this.amount = amount;
-        this.description = "";
+        setAmount(amount);                          // use setter to leverage validation
+        setDescription("");  // default to empty string
+        this.date = LocalDate.now().toString(); 
     }
 
-    public Transaction(TransactionType type, Category category, String description, String date, double amount) {   // 3. Full - all details
+    public Transaction(TransactionType type, Category category, String description, double amount) {   // 3. Full - all details
         this.type = type;
         this.category = category;
         setDescription(description);                // use setter to handle nulls
-        this.date = date;
+        this.date = LocalDate.now().toString();     // use current date
         setAmount(amount);                          // use setter to leverage validation
     }
 
@@ -33,12 +37,12 @@ public class Transaction {
     }
 
     public void setDescription(String description) {
-    if (description == null) {
-        this.description = "";
-        return;
-    }
-    this.description = description;
-    }
+        if (description == null) {
+            this.description = "";
+            return;
+        }
+        this.description = description;
+        }
 
 
     public TransactionType getType() {
