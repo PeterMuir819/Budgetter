@@ -13,14 +13,17 @@ public class BudgetAccount {
 
     public BudgetAccount(String accountName, String month, double spendingLimit) {
         this.balance = 0.0;
+        this.month = month;
+        this.accountName = accountName;
+        this.spendingLimit = spendingLimit;
         this.transactions = new ArrayList<>();
-    }
+    }    
 
     public BudgetAccount(String accountName, String month, double spendingLimit, double previousBalance) {
         this.accountName = accountName;
         this.month = month;
         this.spendingLimit = spendingLimit;
-        this.balance = previousBalance;
+        this.previousBalance = previousBalance;
         this.transactions = new ArrayList<>();
     }
 
@@ -44,8 +47,12 @@ public class BudgetAccount {
         this.transactions = transactions;
     }
 
+    public String getAccountName() {
+        return accountName;
+    }
+
     public double getBalance() {
-        double total = 0.0;
+        double total = previousBalance;         // start with previous balance
         for (Transaction t : transactions) {
             switch (t.getType()) {
                 case INCOME:
@@ -58,6 +65,13 @@ public class BudgetAccount {
             }
         }
         return total;
+    }
+
+    public void adjustToBalance(double targetBalance) {
+        double difference = targetBalance - getBalance();
+        TransactionType type = difference > 0 ? TransactionType.INCOME : TransactionType.EXPENSE;
+        Transaction adjustment = new Transaction(type, Category.OTHER, "Manual balance adjustment", Math.abs(difference));
+        addTransaction(adjustment);
     }
 
 

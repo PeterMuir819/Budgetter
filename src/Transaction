@@ -5,33 +5,38 @@ public class Transaction {
     private   TransactionType type;
     private   Category category;
     private   String description;
-    private   String date;
+    private   LocalDate date;
     private   double amount;
   
     public Transaction() {  // 1. Default — no arguments
         setDescription("");  // default to empty string
-        this.date = LocalDate.now().toString(); 
+        this.date = LocalDate.now(); // default to current date 
     }
 
     public Transaction(TransactionType type, double amount) {   // 2. Partial — maybe just the essentials
+         if (type == null) {
+        throw new IllegalArgumentException("Type is required");
+        }
         this.type = type;
         setAmount(amount);                          // use setter to leverage validation
-        setDescription("");  // default to empty string
-        this.date = LocalDate.now().toString(); 
+        setDescription("");                         // default to empty string
+        this.date = LocalDate.now();                // default to current date
     }
 
     public Transaction(TransactionType type, Category category, String description, double amount) {   // 3. Full - all details
+        if (type == null) {
+            throw new IllegalArgumentException("Type is required");
+        }   
         this.type = type;
-        this.category = category;
+        this.category = (category == null) ? Category.OTHER : category; // default to OTHER if null
         setDescription(description);                // use setter to handle nulls
-        this.date = LocalDate.now().toString();     // use current date
+        this.date = LocalDate.now();                // use current date
         setAmount(amount);                          // use setter to leverage validation
     }
 
     public void setAmount(double amount) {
         if (amount <= 0) {                          // validate first
-            System.out.println("Amount must be positive!");
-            return;                                 // exit early if invalid
+            throw new IllegalArgumentException("Amount must be positive!");
         }
         this.amount = amount;                        // only assign if valid
     }
@@ -57,8 +62,8 @@ public class Transaction {
         return description;
     }
 
-    public String getDate() {
-        return date;
+    public LocalDate getDate() {
+        return date;   
     }
 
     public double getAmount() {
