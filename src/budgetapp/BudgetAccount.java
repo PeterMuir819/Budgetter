@@ -1,25 +1,30 @@
-import java.util.Scanner;
+package budgetapp;
+
+import java.time.YearMonth;
 import java.util.ArrayList;
-import java.time.LocalDate;
 
 public class BudgetAccount {
-    
+
     private String accountName;
-    private double balance;
-    private String month;
+    private YearMonth month;
     private double spendingLimit = 1200.00;
     private double previousBalance;
     private ArrayList<Transaction> transactions;
 
-    public BudgetAccount(String accountName, String month, double spendingLimit) {
-        this.balance = 0.0;
+    public BudgetAccount(String accountName, YearMonth month) {
+        this.accountName = accountName;
+        this.month = month;
+        this.transactions = new ArrayList<>();
+    }
+
+    public BudgetAccount(String accountName, YearMonth month, double spendingLimit) {
         this.month = month;
         this.accountName = accountName;
         this.spendingLimit = spendingLimit;
         this.transactions = new ArrayList<>();
-    }    
+    }
 
-    public BudgetAccount(String accountName, String month, double spendingLimit, double previousBalance) {
+    public BudgetAccount(String accountName, YearMonth month, double spendingLimit, double previousBalance) {
         this.accountName = accountName;
         this.month = month;
         this.spendingLimit = spendingLimit;
@@ -31,11 +36,21 @@ public class BudgetAccount {
         transactions.add(transaction);
     }
 
+    public double getTotalSpent() {
+        double spent = 0.0; // local variable, not an instance field
+        for (Transaction t : transactions) {
+            if (t.getType() == TransactionType.EXPENSE) {
+                spent += t.getAmount();
+            }
+        }
+        return spent;
+    }
+
     public void setAccountName(String accountName) {
         this.accountName = accountName;
     }
 
-    public void setMonth(String month) {
+    public void setMonth(YearMonth month) {
         this.month = month;
     }
 
@@ -51,8 +66,32 @@ public class BudgetAccount {
         return accountName;
     }
 
+    public YearMonth getMonth() {
+        return month;
+    }
+
+    public double getPreviousBalance() {
+        return previousBalance;
+    }
+
+    public double getRemainingBudget() {
+        return spendingLimit - getTotalSpent();
+    }
+
+    public boolean isOverLimit() {
+        return getTotalSpent() > spendingLimit;
+    }
+
+    public ArrayList<Transaction> getTransactions() {
+        return transactions;
+    }
+
+    public double getSpendingLimit() {
+        return spendingLimit;
+    }
+
     public double getBalance() {
-        double total = previousBalance;         // start with previous balance
+        double total = previousBalance; // start with previous balance
         for (Transaction t : transactions) {
             switch (t.getType()) {
                 case INCOME:
@@ -70,9 +109,15 @@ public class BudgetAccount {
     public void adjustToBalance(double targetBalance) {
         double difference = targetBalance - getBalance();
         TransactionType type = difference > 0 ? TransactionType.INCOME : TransactionType.EXPENSE;
-        Transaction adjustment = new Transaction(type, Category.OTHER, "Manual balance adjustment", Math.abs(difference));
+        Transaction adjustment = new Transaction(type, Category.OTHER, "Manual balance adjustment",
+                Math.abs(difference));
         addTransaction(adjustment);
     }
 
+    @Override
+    public String toString() {
+        return String.format("%s | %s | Balance: $%.2f | Spent: $%.2f | Remaining: $%.2f", accountName, month,
+                getBalance(), getTotalSpent(), getRemainingBudget());
+    }
 
 }

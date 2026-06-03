@@ -1,0 +1,87 @@
+package budgetapp;
+
+import java.time.LocalDate;
+
+public class Transaction {
+
+    private TransactionType type;
+    private Category category;
+    private String description;
+    private LocalDate date;
+    private double amount;
+
+    public Transaction() { // 1. Default — no arguments
+        setDescription(""); // default to empty string
+        this.date = LocalDate.now(); // default to current date
+    }
+
+    public Transaction(TransactionType type, double amount) { // 2. Partial — maybe just the essentials
+        if (type == null) {
+            throw new IllegalArgumentException("Type is required");
+        }
+        this.type = type;
+        setAmount(amount); // use setter to leverage validation
+        setDescription(""); // default to empty string
+        this.date = LocalDate.now(); // default to current date
+    }
+
+    public Transaction(TransactionType type, Category category, String description, double amount) { 
+        if (type == null) {
+            throw new IllegalArgumentException("Type is required");
+        }
+        this.type = type;
+        this.category = (category == null) ? Category.OTHER : category; // default to OTHER if null
+        setDescription(description); // use setter to handle nulls
+        this.date = LocalDate.now(); // use current date
+        setAmount(amount); // use setter to leverage validation
+    }
+
+    public void setAmount(double amount) {
+        if (amount <= 0) { // validate first
+            throw new IllegalArgumentException("Amount must be positive! Try Again.");
+        }
+        this.amount = amount; // only assign if valid
+    }
+
+    public void setDescription(String description) {
+        if (description == null) {
+            this.description = "";
+            return;
+        }
+        this.description = description;
+    }
+
+    public void setDate(LocalDate date) {
+        if (date == null) {
+            this.date = LocalDate.now();
+        } else {
+            this.date = date;
+        }
+    }
+
+    public TransactionType getType() {
+        return type;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public double getAmount() {
+        return amount;
+    }
+
+    @Override
+    public String toString() {
+        return date + " | " + type + " | " + category + " | " + description + " | $" + amount;
+    }
+
+}

@@ -1,7 +1,9 @@
+package budgetapp;
+
 public enum Category {
     FOOD,
     RENT,
-    TRANSPORT,
+    TRANSPORTATION,
     ENTERTAINMENT,
     OTHER
 }
