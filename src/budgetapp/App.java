@@ -129,6 +129,7 @@ public class App {
                         }
                         break;
                     case 4:
+                        saveAllAccounts();
                         System.out.println("\nExiting application. Goodbye!");
                         running = false;
                         break;
