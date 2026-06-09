@@ -3,6 +3,7 @@ package budgetapp;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.time.YearMonth;
+import java.io.File;
 import java.io.IOException;
 import java.time.DateTimeException;
 
@@ -19,6 +20,7 @@ public class App {
     public void run() {
         Scanner scnr = new Scanner(System.in);
         boolean running = true;
+        loadAllAccounts();
         while (running) {
             System.out.println();
             System.out.println("Please select from the following options: ");
@@ -152,9 +154,17 @@ public class App {
         return null; // if the loop finishes with no match, return null
     }
 
+    private String sanitizeFilename(String name){
+        return name.replaceAll("[^a-zA-Z0-9-]", "_");
+
+    }
     private void saveAllAccounts() {
+        File dir = new File("data");
+            if (!dir.exists()) {
+            dir.mkdirs();   // creates the folder (and any parent folders)
+            }
         for (BudgetAccount account : accounts) {
-            String filename = account.getAccountName() + "_" + account.getMonth() + ".csv";
+            String filename = "data/" + sanitizeFilename(account.getAccountName()) + "_" + account.getMonth() + ".csv";
             try {
                 BudgetAccountStorage.saveAccount(account, filename);
             } catch (IOException e) {
@@ -162,8 +172,27 @@ public class App {
             }
         }
     }
-}
 
+    private void loadAllAccounts() {
+        File dir = new File("data");
+        if (!dir.exists()) {
+            return;
+        }
+        File[] files = dir.listFiles();
+        if (files == null) {
+            return;
+        }
+        for (File file : files) {
+            if (!file.getName().endsWith(".csv")) {
+                continue;
+            }
+            try {
+                BudgetAccount account = BudgetAccountStorage.loadAccount(file.getPath());
+                accounts.add(account);
+            } catch (IOException e) {
+                System.out.println("Failed to load " + file.getName() + ": " + e.getMessage());
+            }
+            }
         }
     }
-}
+
