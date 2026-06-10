@@ -33,6 +33,9 @@ public class BudgetAccount {
     }
 
     public void addTransaction(Transaction transaction) {
+        if (transaction.getCategory().getType() != transaction.getType()) {
+            throw new IllegalArgumentException(transaction.getCategory() + " is not valid for " + transaction.getType());
+        }
         transactions.add(transaction);
     }
 
@@ -108,9 +111,9 @@ public class BudgetAccount {
 
     public void adjustToBalance(double targetBalance) {
         double difference = targetBalance - getBalance();
-        TransactionType type = difference > 0 ? TransactionType.INCOME : TransactionType.EXPENSE;
-        Transaction adjustment = new Transaction(type, Category.OTHER, "Manual balance adjustment",
-                Math.abs(difference));
+        TransactionType type = difference > 0 ? TransactionType.INCOME : TransactionType.EXPENSE;  
+        Category category = (type == TransactionType.INCOME) ? Category.OTHER_INCOME : Category.OTHER_EXPENSE;
+        Transaction adjustment = new Transaction(type, category, "Manual balance adjustment", Math.abs(difference));
         addTransaction(adjustment);
     }
 

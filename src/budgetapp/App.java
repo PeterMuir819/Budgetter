@@ -1,6 +1,7 @@
 package budgetapp;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.time.YearMonth;
 import java.io.File;
@@ -62,8 +63,7 @@ public class App {
                                 }
                             }
 
-                            BudgetAccount newBudget = new BudgetAccount(accountName, month, spendingLimit, prevbal); // created
-                                                                                                                     // ONCE
+                            BudgetAccount newBudget = new BudgetAccount(accountName, month, spendingLimit, prevbal); 
                             accounts.add(newBudget);
                             if (prevbal > 0) {
                                 System.out.printf("Budget account created successfully. $%.2f Rollover from %s.%n",
@@ -94,8 +94,8 @@ public class App {
                                     TransactionType type = TransactionType.valueOf(typeInput.trim().toUpperCase());
                                     System.out.println("Enter transaction amount: ");
                                     double transactionAmount = Double.parseDouble(scnr.nextLine());
-                                    System.out.println(
-                                            "Enter category (FOOD, RENT, TRANSPORTATION, ENTERTAINMENT, OTHER) or press Enter to skip: ");
+                                    List<Category> validCategories = Category.getCategoriesByType(type);
+                                    System.out.println("Enter category " + validCategories + " or press Enter to skip: ");
                                     String categoryInput = scnr.nextLine();
                                     Category category = categoryInput.isEmpty() ? Category.OTHER
                                             : Category.valueOf(categoryInput.trim().toUpperCase());
